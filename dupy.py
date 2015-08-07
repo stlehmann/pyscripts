@@ -36,17 +36,17 @@ def iter_files(dir_, types=None):
         return filter(lambda x: x.endswith(types), files)
 
 
-def _filecmp(filename, filenames):
+def _filecmp(filename, filenames, shallow=False):
     for fn in filenames:
-        if (not filename == fn) and filecmp.cmp(filename, fn, shallow=False):
+        if (not filename == fn) and filecmp.cmp(filename, fn, shallow=shallow):
             yield fn
 
 
-def iter_dupes(files):
+def iter_dupes(files, shallow=False):
     done = []
     files = list(files)
     for filename in files:
-        dupes = list(_filecmp(filename, files))
+        dupes = list(_filecmp(filename, files, shallow))
         done.extend(dupes)
         if filename not in done and len(dupes):
             yield dupes + [filename]
@@ -66,7 +66,7 @@ def process_arguments(args):
                         type=str,
                         default=None,
                         help=('only list file with these endings, '
-                              'separated by comma (e.g.: mp3,m4a'))
+                              'separated by comma (e.g.: mp3,m4a)'))
 
     # list
     parser.add_argument('-l', '--list',
@@ -82,6 +82,12 @@ def process_arguments(args):
     # verbose
     parser.add_argument('-v', '--verbose',
                         help='verbose output',
+                        action='store_true')
+
+    # shallow
+    parser.add_argument('-s', '--shallow',
+                        help='use shallow file comparison (may be faster, but '
+                              ' less relyable)',
                         action='store_true')
 
     return parser.parse_args(args)
@@ -100,20 +106,15 @@ if __name__ == "__main__":
 
     if args.list:
         for d in dirs:
-            dupes = list(iter_dupes(iter_files(d, types)))
+            dupes = list(iter_dupes(iter_files(d, types), args.shallow))
             if len(dupes):
                 print(green("Found {} dupes in directory {}:".format(
-                    len(dupes), d)))
+                    len(dupes), os.path.relpath(d, args.directory))))
                 for files in dupes:
-                    dir_ = os.path.split(files[0])[0]
-                    if all(os.path.split(f)[0] == dir_ for f in files):
-                        print([os.path.split(f)[1] for f in files])
-                    else:
-                        print(files)
-                        print(dupes)
+                    print([os.path.basename(f) for f in files])
     else:
         for d in dirs:
-            dupes = list(iter_dupes(iter_files(d, types)))
+            dupes = list(iter_dupes(iter_files(d, types), args.shallow))
             if len(dupes):
                 print(red("Found {} dupes in directory {}:".format(
                     len(dupes), os.path.relpath(d, args.directory))))
@@ -122,7 +123,7 @@ if __name__ == "__main__":
                     print(green("Dupe {} of {}:".format(i, len(dupes))))
                     for nr, f in enumerate(files, 1):
                         print("{}: {}".format(
-                            nr, os.path.relpath(f, args.directory)
+                            nr, os.path.basename(f)
                         ))
                     for inp in input("Delete file(s) with nr: ").split():
                         nr = int(inp)
