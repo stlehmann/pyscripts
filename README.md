@@ -4,6 +4,7 @@ pyscripts
 This is supposed to be a collection of python scripts for usefule everyday use.
 
 Copyright (c) 2015 by Stefan Lehmann
+
 License: MIT License
 
 dupy.py - Duplicate finder
