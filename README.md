@@ -21,7 +21,7 @@ function.
 
 
 ```bash
-usage: dupy.py [-h] [-t FILETYPES] [-l] [-r] [-v] directory
+usage: dupy.py [-h] [-t FILETYPES] [-l] [-r] [-v] [-s] directory
 
 Find duplicate files.
 
@@ -36,4 +36,6 @@ optional arguments:
   -l, --list            only list dupes
   -r                    recursively search all subdirectories
   -v, --verbose         verbose output
-``
+  -s, --shallow         use shallow file comparison (may be faster, but less
+                        relyable)
+```
