@@ -1,5 +1,4 @@
-pyscripts
-=========
+# pyscripts
 
 This is supposed to be a collection of python scripts for usefule everyday use.
 
@@ -7,8 +6,17 @@ Copyright (c) 2015 by Stefan Lehmann
 
 License: MIT License
 
-dupy.py - Duplicate finder
---------------------------
+## sqlalchemy_migrate
+
+Two scripts for convenient migration of sqlalchemy databases.
+
+* `db_create.py`: create database and repository
+* `db_migrate.py`: create change script for the current model and update database
+
+These two scripts were written by Miguel Grinberg and published in his [Flask Mega Tutorial](http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database).
+
+## dupy.py - Duplicate finder
+
 Find duplicate files within directories. The file comparison is done by Pythons
 [`filecmp.cmp()`](https://docs.python.org/2/library/filecmp.html#module-filecmp)
 function.
@@ -39,3 +47,4 @@ optional arguments:
   -s, --shallow         use shallow file comparison (may be faster, but less
                         relyable)
 ```
+
