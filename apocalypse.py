@@ -9,9 +9,9 @@ Remove all private data from pc.
 import os
 import argparse
 
+
 # all my secret files go in here
 targets = [
-
 ]
 
 
@@ -35,10 +35,11 @@ def try_delete(filename):
     try:
         os.remove(filename)
     except FileNotFoundError as e:
-        print('...not found')
+        print('File "{}"...not found'.format(filename))
     except Exception as e:
         print(e)
     else:
+        print('File "{}"...deleted'.format(filename))
         res = True
     return res
 
@@ -57,14 +58,12 @@ def delete_data(dryrun, confirm=True):
             res = input('Delete file "{}" (Y/n/a)?'.format(target))
 
             if res.lower() in ('y', 'a', ''):
-                if try_delete(target):
-                    print('...Done')
+                try_delete(target)
 
-            if res.lower == 'a':
+            if res.lower() == 'a':
                 confirm = False
         else:
             try_delete(target)
-
 
 if __name__ == '__main__':
     args = parser.parse_args()
